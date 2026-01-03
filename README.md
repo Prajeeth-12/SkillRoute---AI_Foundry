@@ -157,5 +157,3 @@ ENV=development
 OPENAI_API_KEY=your_openai_key_here
 FIREBASE_CREDENTIALS=./firebase-credentials.json
 ```
-
-**Built with passion for helping students achieve their career goals**
