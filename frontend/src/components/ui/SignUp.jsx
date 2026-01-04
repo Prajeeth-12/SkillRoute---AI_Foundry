@@ -220,12 +220,12 @@ export const SignUp = () => {
       </Card>
 
       {/* Developed By Section */}
-      <div className="mt-8 text-center animate-fade-in max-w-2xl mx-auto">
+      <div className="mt-8 text-center animate-fade-in w-full -mx-4 px-4 md:mx-auto md:max-w-md">
         <p className="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs font-bold mb-4 uppercase tracking-wider">Developed by</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Haridharshini J */}
-          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
-            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs border border-gray-200 dark:border-zinc-700">HJ</div>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
+            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">HJ</div>
             <div className="text-left flex-1">
               <p className="text-xs font-bold text-gray-900 dark:text-white">Haridharshini J</p>
               <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Full Stack Developer</p>
@@ -234,8 +234,8 @@ export const SignUp = () => {
           </a>
           
           {/* Dheebash Sai R */}
-          <a href="https://www.linkedin.com/in/dheebash-sai-ramesh-563b96320/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
-            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs border border-gray-200 dark:border-zinc-700">DS</div>
+          <a href="https://www.linkedin.com/in/dheebash-sai-ramesh-563b96320/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
+            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">DS</div>
             <div className="text-left flex-1">
               <p className="text-xs font-bold text-gray-900 dark:text-white">Dheebash Sai R</p>
               <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Full Stack Developer</p>
@@ -244,8 +244,8 @@ export const SignUp = () => {
           </a>
 
           {/* Bala Saravanan K */}
-          <a href="https://www.linkedin.com/in/bala-saravanan-k/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
-            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs border border-gray-200 dark:border-zinc-700">BS</div>
+          <a href="https://www.linkedin.com/in/bala-saravanan-k/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
+            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">BS</div>
             <div className="text-left flex-1">
               <p className="text-xs font-bold text-gray-900 dark:text-white">Bala Saravanan K</p>
               <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Web Designer</p>
@@ -254,8 +254,8 @@ export const SignUp = () => {
           </a>
 
           {/* Thanushree Vijayakanth */}
-          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
-            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs border border-gray-200 dark:border-zinc-700">TV</div>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
+            <div className="w-8 h-8 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">TV</div>
             <div className="text-left flex-1">
               <p className="text-xs font-bold text-gray-900 dark:text-white">Thanushree Vijayakanth</p>
               <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Backend Developer</p>
