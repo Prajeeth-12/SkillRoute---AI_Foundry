@@ -16,46 +16,46 @@ export function FloatingHeader({ onLogout, userName }) {
 		<header
 			className={cn(
 				'sticky top-5 z-50',
-				'mx-auto w-full max-w-3xl rounded-full border shadow dark:shadow-none',
+				'mx-auto w-[92%] sm:w-full max-w-2xl rounded-full border shadow dark:shadow-none',
 				'bg-background/95 dark:bg-zinc-900/95 supports-[backdrop-filter]:bg-background/80 dark:supports-[backdrop-filter]:bg-zinc-900/80 backdrop-blur-lg',
 				'dark:border-zinc-800',
 			)}
 		>
-			<nav className="mx-auto flex items-center justify-between p-1.5 px-4">
-				<div 
+			<nav className="mx-auto flex items-center justify-between p-1 px-3">
+				<div
 					className="hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 duration-100"
 					onClick={() => navigate('/dashboard')}
 				>
-					<Compass className="size-5" />
-					<p className="font-mono text-base font-bold">SkillRoute</p>
+					<Compass className="size-4 text-gray-900 dark:text-white" />
+					<p className="font-mono text-sm font-bold text-gray-900 dark:text-white">SkillRoute</p>
 				</div>
-				
+
 				<div className="flex items-center gap-2">
-                    {userName && <span className="text-sm font-semibold text-gray-900 dark:text-white hidden sm:inline-block mr-2">{userName}</span>}
-                    
+					{userName && <span className="text-xs font-semibold text-gray-900 dark:text-white hidden sm:inline-block mr-2">{userName}</span>}
+
 					{/* Profile Circle Avatar */}
-					<div 
-						className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm cursor-pointer hover:opacity-90 transition-opacity"
+					<div
+						className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs cursor-pointer hover:opacity-90 transition-opacity"
 						onClick={() => navigate('/profile')}
 					>
 						{userInitial}
 					</div>
 
-					<Button 
-						variant="ghost" 
-						size="icon" 
-						className="rounded-full h-10 w-10"
+					<Button
+						variant="ghost"
+						size="icon"
+						className="rounded-full h-8 w-8 text-gray-700 dark:text-white"
 						onClick={toggleTheme}
 					>
-						{theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+						{theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
 					</Button>
-					<Button 
-						variant="ghost" 
-						size="icon" 
-						className="rounded-full h-10 w-10 text-gray-500 hover:text-red-600"
+					<Button
+						variant="ghost"
+						size="icon"
+						className="rounded-full h-8 w-8 text-gray-500 hover:text-red-600"
 						onClick={onLogout}
 					>
-						<LogOut className="h-5 w-5" />
+						<LogOut className="h-4 w-4" />
 					</Button>
 				</div>
 			</nav>

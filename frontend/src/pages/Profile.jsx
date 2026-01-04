@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
+import ToastContainer from '../components/Toast';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -15,21 +16,21 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { 
-  ChevronLeft, 
+import {
+  ChevronLeft,
   Save,
-  Sparkles, 
-  Globe, 
-  Smartphone, 
-  Brain, 
-  BarChart3, 
-  Cloud, 
-  Shield, 
-  Settings, 
-  Gamepad2, 
-  Link2, 
-  Radio, 
-  Palette, 
+  Sparkles,
+  Globe,
+  Smartphone,
+  Brain,
+  BarChart3,
+  Cloud,
+  Shield,
+  Settings,
+  Gamepad2,
+  Link2,
+  Radio,
+  Palette,
   Code2,
   Compass
 } from 'lucide-react';
@@ -60,7 +61,7 @@ const SKILL_OPTIONS = [
   { name: 'Ruby', category: 'Languages' },
   { name: 'Swift', category: 'Languages' },
   { name: 'Kotlin', category: 'Languages' },
-  
+
   // Frontend
   { name: 'React', category: 'Frontend' },
   { name: 'Vue.js', category: 'Frontend' },
@@ -69,7 +70,7 @@ const SKILL_OPTIONS = [
   { name: 'Next.js', category: 'Frontend' },
   { name: 'HTML/CSS', category: 'Frontend' },
   { name: 'Tailwind CSS', category: 'Frontend' },
-  
+
   // Backend
   { name: 'Node.js', category: 'Backend' },
   { name: 'Django', category: 'Backend' },
@@ -78,7 +79,7 @@ const SKILL_OPTIONS = [
   { name: 'Express.js', category: 'Backend' },
   { name: 'FastAPI', category: 'Backend' },
   { name: '.NET', category: 'Backend' },
-  
+
   // Database
   { name: 'SQL', category: 'Database' },
   { name: 'PostgreSQL', category: 'Database' },
@@ -86,7 +87,7 @@ const SKILL_OPTIONS = [
   { name: 'MySQL', category: 'Database' },
   { name: 'Redis', category: 'Database' },
   { name: 'Firebase', category: 'Database' },
-  
+
   // Cloud & DevOps
   { name: 'AWS', category: 'Cloud/DevOps' },
   { name: 'Azure', category: 'Cloud/DevOps' },
@@ -95,7 +96,7 @@ const SKILL_OPTIONS = [
   { name: 'Kubernetes', category: 'Cloud/DevOps' },
   { name: 'CI/CD', category: 'Cloud/DevOps' },
   { name: 'Git', category: 'Cloud/DevOps' },
-  
+
   // Data & AI
   { name: 'Machine Learning', category: 'Data/AI' },
   { name: 'TensorFlow', category: 'Data/AI' },
@@ -133,8 +134,20 @@ const Profile = () => {
   const [customInterest, setCustomInterest] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [toasts, setToasts] = useState([]);
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+  // Toast notification functions
+  const showToast = (message, type = 'success') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => removeToast(id), 3000);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   useEffect(() => {
     loadProfile();
@@ -146,7 +159,7 @@ const Profile = () => {
       const response = await axios.get(`${API_URL}/api/students/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (response.data && !response.data.message) {
         // Convert comma-separated strings back to arrays
         setFormData({
@@ -206,23 +219,23 @@ const Profile = () => {
   const handleSubmit = async () => {
     // Validate required fields
     if (!formData.name.trim()) {
-      alert('Please enter your name');
+      showToast('⚠️ Please enter your name', 'error');
       return;
     }
     if (!formData.education) {
-      alert('Please select your education level');
+      showToast('⚠️ Please select your education level', 'error');
       return;
     }
     if (formData.skills.length === 0) {
-      alert('Please select at least one skill');
+      showToast('⚠️ Please select at least one skill', 'error');
       return;
     }
     if (formData.interests.length === 0) {
-      alert('Please select at least one career interest');
+      showToast('⚠️ Please select at least one career interest', 'error');
       return;
     }
     if (!formData.goals.trim()) {
-      alert('Please enter your career goals');
+      showToast('⚠️ Please enter your career goals', 'error');
       return;
     }
 
@@ -230,13 +243,13 @@ const Profile = () => {
     try {
       // Check if user is authenticated
       if (!auth.currentUser) {
-        alert('You must be logged in to save your profile');
+        showToast('⚠️ You must be logged in to save your profile', 'error');
         navigate('/login');
         return;
       }
 
       const token = await auth.currentUser.getIdToken();
-      
+
       // Convert arrays to comma-separated strings for backend
       const profileData = {
         name: formData.name.trim(),
@@ -246,24 +259,24 @@ const Profile = () => {
         goals: formData.goals.trim(),
         experience: formData.experience ? formData.experience.trim() : ''
       };
-      
+
       console.log('Saving profile:', profileData);
-      
+
       const response = await axios.post(`${API_URL}/api/students/profile`, profileData, {
-        headers: { 
+        headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
       console.log('Profile saved successfully:', response.data);
-      alert('Profile saved successfully!');
+      showToast('✅ Profile saved successfully!', 'success');
       navigate('/dashboard');
     } catch (error) {
       console.error('Error saving profile:', error);
-      
+
       let errorMessage = 'Failed to save profile. ';
-      
+
       if (error.response) {
         // Server responded with error
         console.error('Error response:', error.response.data);
@@ -277,8 +290,8 @@ const Profile = () => {
         console.error('Error details:', error.message);
         errorMessage += error.message || 'Please try again.';
       }
-      
-      alert(errorMessage);
+
+      showToast(errorMessage, 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -306,7 +319,7 @@ const Profile = () => {
       {/* App Header */}
       <div className="mb-6 sm:mb-8 text-center animate-fade-in">
         <div className="flex items-center justify-center gap-3 mb-2">
-          <div 
+          <div
             className="p-2.5 bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
             onClick={() => navigate('/dashboard')}
           >
@@ -391,11 +404,10 @@ const Profile = () => {
                         key={skill}
                         type="button"
                         onClick={() => toggleSkill(skill)}
-                        className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                          formData.skills.includes(skill)
-                            ? 'bg-black text-white shadow-md'
-                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-black border border-gray-200'
-                        }`}
+                        className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${formData.skills.includes(skill)
+                          ? 'bg-black text-white shadow-md'
+                          : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-black border border-gray-200'
+                          }`}
                       >
                         {skill}
                       </button>
@@ -456,11 +468,10 @@ const Profile = () => {
                         key={domain.name}
                         type="button"
                         onClick={() => toggleInterest(domain.name)}
-                        className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${
-                          formData.interests.includes(domain.name)
-                            ? 'border-black bg-gray-50 shadow-md'
-                            : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
-                        }`}
+                        className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${formData.interests.includes(domain.name)
+                          ? 'border-black bg-gray-50 shadow-md'
+                          : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
+                          }`}
                       >
                         <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 mx-auto ${formData.interests.includes(domain.name) ? 'text-black' : 'text-gray-600'}`} />
                         <div className="text-center leading-tight">{domain.name}</div>
@@ -480,11 +491,10 @@ const Profile = () => {
                         key={domain.name}
                         type="button"
                         onClick={() => toggleInterest(domain.name)}
-                        className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${
-                          formData.interests.includes(domain.name)
-                            ? 'border-black bg-gray-50 shadow-md'
-                            : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
-                        }`}
+                        className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${formData.interests.includes(domain.name)
+                          ? 'border-black bg-gray-50 shadow-md'
+                          : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
+                          }`}
                       >
                         <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 mx-auto ${formData.interests.includes(domain.name) ? 'text-black' : 'text-gray-600'}`} />
                         <div className="text-center leading-tight">{domain.name}</div>
@@ -579,6 +589,9 @@ const Profile = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

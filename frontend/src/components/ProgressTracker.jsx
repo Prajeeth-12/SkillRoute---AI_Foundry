@@ -51,26 +51,29 @@ const ProgressTracker = ({ progress, phases }) => {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div className="mobile-spacing">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {/* Streak Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="flex"
+          className="h-full"
         >
-          <Card className="glass-card hover-lift shadow-lg border border-gray-200 dark:border-zinc-800 rounded-xl w-full">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 bg-gray-900 dark:bg-white rounded-xl shadow-lg flex-shrink-0">
-                  <Flame className="w-8 h-8 text-white dark:text-black" />
+          <Card className="h-full hover-lift bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+            <CardContent className="p-3 h-full flex items-center justify-center">
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="p-2 bg-gray-900 dark:bg-white rounded-xl shadow-md">
+                  <Flame className="w-5 h-5 text-white dark:text-black" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Current Streak</p>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {streak_days} Days
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5">
+                    Streak
+                  </p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-none">
+                    {streak_days}
                   </h3>
+                  <p className="text-[10px] text-gray-500 mt-0.5">Days</p>
                 </div>
               </div>
             </CardContent>
@@ -82,26 +85,30 @@ const ProgressTracker = ({ progress, phases }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="flex"
+          className="h-full"
         >
-          <Card className="glass-card hover-lift shadow-lg border border-gray-200 dark:border-zinc-800 rounded-xl w-full">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="p-3 bg-blue-600 dark:bg-blue-500 rounded-xl shadow-lg flex-shrink-0">
-                  <Trophy className="w-8 h-8 text-white" />
+          <Card className="h-full hover-lift bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+            <CardContent className="p-3 h-full flex items-center justify-center">
+              <div className="flex flex-col items-center text-center gap-2 w-full">
+                <div className="p-2 bg-blue-600 dark:bg-blue-500 rounded-xl shadow-md">
+                  <Trophy className="w-5 h-5 text-white" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Overall Progress</p>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{percentage}%</h3>
+                <div className="w-full">
+                  <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5">
+                    Progress
+                  </p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-none mb-2">
+                    {percentage}%
+                  </h3>
+                  <div className="w-full bg-gray-100 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${percentage}%` }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                      className="h-full rounded-full bg-blue-600 dark:bg-blue-500"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-2.5 overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${percentage}%` }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                  className="h-full rounded-full bg-blue-600 dark:bg-blue-500 shadow-lg"
-                />
               </div>
             </CardContent>
           </Card>
@@ -112,17 +119,21 @@ const ProgressTracker = ({ progress, phases }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="flex"
+          className="h-full"
         >
-          <Card className="glass-card hover-lift shadow-lg border border-gray-200 dark:border-zinc-800 rounded-xl w-full">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-4">
-                <div className={`p-3 rounded-xl flex-shrink-0 bg-gray-900 dark:bg-white`}>
-                  <PaceIcon className="w-8 h-8 text-white dark:text-black" />
+          <Card className="h-full hover-lift bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+            <CardContent className="p-3 h-full flex items-center justify-center">
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="p-2 bg-gray-900 dark:bg-white rounded-xl shadow-md">
+                  <PaceIcon className="w-5 h-5 text-white dark:text-black" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Learning Pace</p>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{pace.label}</h3>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5">
+                    Pace
+                  </p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white leading-tight">
+                    {pace.label}
+                  </h3>
                 </div>
               </div>
             </CardContent>
@@ -134,18 +145,20 @@ const ProgressTracker = ({ progress, phases }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
-          className="flex"
+          className="h-full"
         >
-          <Card className="glass-card hover-lift shadow-lg border border-gray-200 dark:border-zinc-800 rounded-xl w-full">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 bg-gray-900 dark:bg-white rounded-xl shadow-lg flex-shrink-0">
-                  <Calendar className="w-8 h-8 text-white dark:text-black" />
+          <Card className="h-full hover-lift bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+            <CardContent className="p-3 h-full flex items-center justify-center">
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="p-2 bg-gray-900 dark:bg-white rounded-xl shadow-md">
+                  <Calendar className="w-5 h-5 text-white dark:text-black" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Last Active</p>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white whitespace-nowrap">
-                    {last_activity_date ? new Date(last_activity_date).toLocaleDateString() : 'Today'}
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5">
+                    Last Active
+                  </p>
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-tight">
+                    {last_activity_date ? new Date(last_activity_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Today'}
                   </h3>
                 </div>
               </div>

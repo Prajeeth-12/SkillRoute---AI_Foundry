@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Lightbulb, Target, TrendingUp, AlertCircle, CheckCircle2, ExternalLink } from 'lucide-react';
 
 const DecisionInsightsModal = ({ isOpen, onClose, careerDecision }) => {
+    console.log('DecisionInsightsModal render - isOpen:', isOpen, 'careerDecision:', careerDecision);
+
     if (!isOpen || !careerDecision) return null;
 
     const {
@@ -35,7 +37,16 @@ const DecisionInsightsModal = ({ isOpen, onClose, careerDecision }) => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto glass-card rounded-2xl shadow-2xl"
+                        style={{
+                            scrollbarWidth: 'none', /* Firefox */
+                            msOverflowStyle: 'none', /* IE and Edge */
+                        }}
                     >
+                        <style>{`
+                            .glass-card::-webkit-scrollbar {
+                                display: none; /* Chrome, Safari, Opera */
+                            }
+                        `}</style>
                         {/* Header */}
                         <div className="sticky top-0 z-10 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-zinc-700 p-6">
                             <div className="flex items-start justify-between">

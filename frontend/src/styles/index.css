@@ -102,6 +102,41 @@
   .text-responsive-xl {
     @apply text-lg sm:text-xl md:text-2xl;
   }
+
+  /* Mobile-Optimized Spacing */
+  .mobile-padding {
+    @apply p-4 sm:p-6 md:p-8;
+  }
+
+  .mobile-gap {
+    @apply gap-3 sm:gap-4 md:gap-6;
+  }
+
+  .mobile-spacing {
+    @apply space-y-4 sm:space-y-6 md:space-y-8;
+  }
+
+  /* Touch-Friendly Buttons */
+  .btn-touch {
+    @apply min-h-[48px] px-6 py-3 rounded-xl font-semibold transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply btn-touch bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl active:scale-95;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+
+  .btn-secondary {
+    @apply btn-touch bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-900 dark:text-white;
+  }
+
+  /* Mobile-Optimized Cards */
+  .mobile-card {
+    @apply rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 dark:border-zinc-800 shadow-lg;
+  }
 }
 
 @layer utilities {
@@ -125,6 +160,21 @@
     to {
       background-position: -200% 0;
     }
+  }
+
+  /* Shimmer Animation for Progress Bars */
+  @keyframes shimmer-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer-slide 2s infinite;
   }
 
   /* Pulse Glow Animation */

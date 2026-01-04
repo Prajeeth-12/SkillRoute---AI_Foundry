@@ -230,7 +230,7 @@ export const SignIn = () => {
         <p className="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs lg:text-sm font-bold mb-4 lg:mb-6 uppercase tracking-wider">Developed by</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
           {/* Haridharshini J */}
-          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 lg:gap-4 p-2 lg:p-3 pr-4 lg:pr-5 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
+          <a href="https://www.linkedin.com/in/haridharshini-jayaraj-45a704306/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 lg:gap-4 p-2 lg:p-3 pr-4 lg:pr-5 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
             <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs lg:text-sm">HJ</div>
             <div className="text-left flex-1">
               <p className="text-xs lg:text-sm font-bold text-gray-900 dark:text-white">Haridharshini J</p>
@@ -260,7 +260,7 @@ export const SignIn = () => {
           </a>
 
           {/* Thanushree Vijayakanth */}
-          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 lg:gap-4 p-2 lg:p-3 pr-4 lg:pr-5 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
+          <a href="https://www.linkedin.com/in/thanushree-vijayakanth-a04a7631b/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 lg:gap-4 p-2 lg:p-3 pr-4 lg:pr-5 bg-white dark:bg-zinc-900 rounded-full border-2 border-gray-200 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all group hover:scale-105">
             <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-black dark:bg-indigo-600 flex items-center justify-center text-white font-bold text-xs lg:text-sm">TV</div>
             <div className="text-left flex-1">
               <p className="text-xs lg:text-sm font-bold text-gray-900 dark:text-white">Thanushree V</p>
