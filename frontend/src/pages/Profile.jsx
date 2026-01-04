@@ -1,0 +1,533 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
+import axios from 'axios';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Textarea } from '../components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { 
+  ChevronLeft, 
+  Save,
+  Sparkles, 
+  Globe, 
+  Smartphone, 
+  Brain, 
+  BarChart3, 
+  Cloud, 
+  Shield, 
+  Settings, 
+  Gamepad2, 
+  Link2, 
+  Radio, 
+  Palette, 
+  Code2,
+  Compass
+} from 'lucide-react';
+
+// Predefined options
+const EDUCATION_LEVELS = [
+  'High School',
+  'Associate Degree',
+  'Bachelor\'s Degree',
+  'Master\'s Degree',
+  'PhD',
+  'Bootcamp',
+  'Self-Taught',
+  'Other'
+];
+
+const SKILL_OPTIONS = [
+  // Programming Languages
+  { name: 'JavaScript', category: 'Languages' },
+  { name: 'Python', category: 'Languages' },
+  { name: 'Java', category: 'Languages' },
+  { name: 'TypeScript', category: 'Languages' },
+  { name: 'C++', category: 'Languages' },
+  { name: 'C#', category: 'Languages' },
+  { name: 'Go', category: 'Languages' },
+  { name: 'Rust', category: 'Languages' },
+  { name: 'PHP', category: 'Languages' },
+  { name: 'Ruby', category: 'Languages' },
+  { name: 'Swift', category: 'Languages' },
+  { name: 'Kotlin', category: 'Languages' },
+  
+  // Frontend
+  { name: 'React', category: 'Frontend' },
+  { name: 'Vue.js', category: 'Frontend' },
+  { name: 'Angular', category: 'Frontend' },
+  { name: 'Svelte', category: 'Frontend' },
+  { name: 'Next.js', category: 'Frontend' },
+  { name: 'HTML/CSS', category: 'Frontend' },
+  { name: 'Tailwind CSS', category: 'Frontend' },
+  
+  // Backend
+  { name: 'Node.js', category: 'Backend' },
+  { name: 'Django', category: 'Backend' },
+  { name: 'Flask', category: 'Backend' },
+  { name: 'Spring Boot', category: 'Backend' },
+  { name: 'Express.js', category: 'Backend' },
+  { name: 'FastAPI', category: 'Backend' },
+  { name: '.NET', category: 'Backend' },
+  
+  // Database
+  { name: 'SQL', category: 'Database' },
+  { name: 'PostgreSQL', category: 'Database' },
+  { name: 'MongoDB', category: 'Database' },
+  { name: 'MySQL', category: 'Database' },
+  { name: 'Redis', category: 'Database' },
+  { name: 'Firebase', category: 'Database' },
+  
+  // Cloud & DevOps
+  { name: 'AWS', category: 'Cloud/DevOps' },
+  { name: 'Azure', category: 'Cloud/DevOps' },
+  { name: 'GCP', category: 'Cloud/DevOps' },
+  { name: 'Docker', category: 'Cloud/DevOps' },
+  { name: 'Kubernetes', category: 'Cloud/DevOps' },
+  { name: 'CI/CD', category: 'Cloud/DevOps' },
+  { name: 'Git', category: 'Cloud/DevOps' },
+  
+  // Data & AI
+  { name: 'Machine Learning', category: 'Data/AI' },
+  { name: 'TensorFlow', category: 'Data/AI' },
+  { name: 'PyTorch', category: 'Data/AI' },
+  { name: 'Data Analysis', category: 'Data/AI' },
+  { name: 'Pandas', category: 'Data/AI' },
+  { name: 'NumPy', category: 'Data/AI' },
+];
+
+const DOMAIN_OPTIONS = [
+  { name: 'Web Development', trending: true, icon: Globe },
+  { name: 'Mobile Development', trending: true, icon: Smartphone },
+  { name: 'AI/Machine Learning', trending: true, icon: Brain },
+  { name: 'Data Science', trending: true, icon: BarChart3 },
+  { name: 'Cloud Computing', trending: true, icon: Cloud },
+  { name: 'Cybersecurity', trending: false, icon: Shield },
+  { name: 'DevOps', trending: true, icon: Settings },
+  { name: 'Game Development', trending: false, icon: Gamepad2 },
+  { name: 'Blockchain', trending: false, icon: Link2 },
+  { name: 'IoT', trending: false, icon: Radio },
+  { name: 'UI/UX Design', trending: false, icon: Palette },
+  { name: 'Full Stack Development', trending: true, icon: Code2 },
+];
+
+const Profile = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    education: '',
+    skills: [],
+    interests: [],
+    goals: '',
+    experience: ''
+  });
+  const [customSkill, setCustomSkill] = useState('');
+  const [customInterest, setCustomInterest] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = async () => {
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const response = await axios.get(`${API_URL}/api/students/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data && !response.data.message) {
+        // Convert comma-separated strings back to arrays
+        setFormData({
+          name: response.data.name || '',
+          education: response.data.education || '',
+          skills: response.data.skills ? response.data.skills.split(', ').filter(s => s) : [],
+          interests: response.data.interests ? response.data.interests.split(', ').filter(i => i) : [],
+          goals: response.data.goals || '',
+          experience: response.data.experience || ''
+        });
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSkill = (skillName) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.includes(skillName)
+        ? prev.skills.filter(s => s !== skillName)
+        : [...prev.skills, skillName]
+    }));
+  };
+
+  const addCustomSkill = () => {
+    if (customSkill.trim() && !formData.skills.includes(customSkill.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        skills: [...prev.skills, customSkill.trim()]
+      }));
+      setCustomSkill('');
+    }
+  };
+
+  const toggleInterest = (interestName) => {
+    setFormData(prev => ({
+      ...prev,
+      interests: prev.interests.includes(interestName)
+        ? prev.interests.filter(i => i !== interestName)
+        : [...prev.interests, interestName]
+    }));
+  };
+
+  const addCustomInterest = () => {
+    if (customInterest.trim() && !formData.interests.includes(customInterest.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        interests: [...prev.interests, customInterest.trim()]
+      }));
+      setCustomInterest('');
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const token = await auth.currentUser.getIdToken();
+      
+      // Convert arrays to comma-separated strings for backend
+      const profileData = {
+        name: formData.name,
+        education: formData.education,
+        skills: formData.skills.join(', '),
+        interests: formData.interests.join(', '),
+        goals: formData.goals,
+        experience: formData.experience || ''
+      };
+      
+      await axios.post(`${API_URL}/api/students/profile`, profileData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('Failed to save profile. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Group skills by category
+  const skillsByCategory = SKILL_OPTIONS.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
+    }
+    acc[skill.category].push(skill.name);
+    return acc;
+  }, {});
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-black flex flex-col items-center justify-center p-3 sm:p-4 md:p-6">
+      {/* App Header */}
+      <div className="mb-6 sm:mb-8 text-center animate-fade-in">
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div 
+            className="p-2.5 bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+            onClick={() => navigate('/dashboard')}
+          >
+            <Compass className="w-6 h-6 sm:w-8 sm:h-8 text-black dark:text-white" />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Edit Profile</h1>
+        </div>
+        <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium">Update your information and preferences</p>
+      </div>
+
+      <div className="w-full max-w-4xl">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/dashboard')}
+          className="mb-4 gap-2 text-gray-600 hover:text-black"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Button>
+
+        <Card className="shadow-xl dark:shadow-none border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <CardHeader className="p-4 sm:p-5 md:p-6 border-b border-gray-100 dark:border-zinc-800">
+            <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              Personal Information
+            </CardTitle>
+            <CardDescription className="text-sm sm:text-base font-semibold text-gray-500 dark:text-gray-400 mt-1">
+              Keep your profile up to date for better career recommendations
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="p-4 sm:p-5 md:p-6 space-y-6 sm:space-y-8">
+            {/* Basic Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-3 sm:space-y-4"
+            >
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 pb-2 border-b border-gray-200">Basic Information</h3>
+              <div>
+                <Label htmlFor="name" className="text-sm sm:text-base font-bold text-gray-900">Full Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Enter your name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="mt-1.5 bg-white border-gray-200 focus:border-black focus:ring-black"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="education" className="text-sm sm:text-base font-bold text-gray-900">Education Level</Label>
+                <Select value={formData.education} onValueChange={(value) => setFormData({ ...formData, education: value })}>
+                  <SelectTrigger className="mt-1.5 bg-white border-gray-200 focus:border-black focus:ring-black">
+                    <SelectValue placeholder="Select your education level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {EDUCATION_LEVELS.map((level) => (
+                      <SelectItem key={level} value={level}>
+                        {level}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </motion.div>
+
+            {/* Skills */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-4 sm:space-y-5"
+            >
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 pb-2 border-b border-gray-200">Skills</h3>
+              {Object.entries(skillsByCategory).map(([category, skills]) => (
+                <div key={category}>
+                  <h4 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">{category}</h4>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    {skills.map((skill) => (
+                      <button
+                        key={skill}
+                        type="button"
+                        onClick={() => toggleSkill(skill)}
+                        className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                          formData.skills.includes(skill)
+                            ? 'bg-black text-white shadow-md'
+                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-black border border-gray-200'
+                        }`}
+                      >
+                        {skill}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div className="pt-2 border-t border-gray-100">
+                <Label className="text-sm sm:text-base font-bold text-gray-900">Add Custom Skill</Label>
+                <div className="flex gap-2 mt-1.5">
+                  <Input
+                    placeholder="Type a skill..."
+                    value={customSkill}
+                    onChange={(e) => setCustomSkill(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addCustomSkill()}
+                    className="bg-white border-gray-200 focus:border-black"
+                  />
+                  <Button onClick={addCustomSkill} type="button" className="bg-black hover:bg-gray-800 text-white">Add</Button>
+                </div>
+              </div>
+
+              {formData.skills.length > 0 && (
+                <div className="pt-3 border-t border-gray-100 bg-gray-50 rounded-xl p-3">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900 mb-2">Selected Skills ({formData.skills.length})</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {formData.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-2.5 py-1 bg-black text-white rounded-full text-xs sm:text-sm font-semibold shadow-sm"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Interests */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-4 sm:space-y-5"
+            >
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 pb-2 border-b border-gray-200">Career Interests</h3>
+              <div>
+                <div className="flex items-center gap-2 mb-2.5">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
+                  <h4 className="text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wide">Trending Domains</h4>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
+                  {DOMAIN_OPTIONS.filter(d => d.trending).map((domain) => {
+                    const IconComponent = domain.icon;
+                    return (
+                      <button
+                        key={domain.name}
+                        type="button"
+                        onClick={() => toggleInterest(domain.name)}
+                        className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${
+                          formData.interests.includes(domain.name)
+                            ? 'border-black bg-gray-50 shadow-md'
+                            : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
+                        }`}
+                      >
+                        <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 mx-auto ${formData.interests.includes(domain.name) ? 'text-black' : 'text-gray-600'}`} />
+                        <div className="text-center leading-tight">{domain.name}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs sm:text-sm font-bold text-gray-900 mb-2.5 uppercase tracking-wide">Other Domains</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
+                  {DOMAIN_OPTIONS.filter(d => !d.trending).map((domain) => {
+                    const IconComponent = domain.icon;
+                    return (
+                      <button
+                        key={domain.name}
+                        type="button"
+                        onClick={() => toggleInterest(domain.name)}
+                        className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${
+                          formData.interests.includes(domain.name)
+                            ? 'border-black bg-gray-50 shadow-md'
+                            : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
+                        }`}
+                      >
+                        <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 mx-auto ${formData.interests.includes(domain.name) ? 'text-black' : 'text-gray-600'}`} />
+                        <div className="text-center leading-tight">{domain.name}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-gray-100">
+                <Label className="text-sm sm:text-base font-bold text-gray-900">Add Custom Interest</Label>
+                <div className="flex gap-2 mt-1.5">
+                  <Input
+                    placeholder="Type an interest..."
+                    value={customInterest}
+                    onChange={(e) => setCustomInterest(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addCustomInterest()}
+                    className="bg-white border-gray-200 focus:border-black"
+                  />
+                  <Button onClick={addCustomInterest} type="button" className="bg-black hover:bg-gray-800 text-white">Add</Button>
+                </div>
+              </div>
+
+              {formData.interests.length > 0 && (
+                <div className="pt-3 border-t border-gray-100 bg-gray-50 rounded-xl p-3">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900 mb-2">Selected Interests ({formData.interests.length})</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {formData.interests.map((interest) => (
+                      <span
+                        key={interest}
+                        className="px-2.5 py-1 bg-black text-white rounded-full text-xs sm:text-sm font-semibold shadow-sm"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Goals & Experience */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="space-y-3 sm:space-y-4"
+            >
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 pb-2 border-b border-gray-200">Goals & Experience</h3>
+              <div>
+                <Label htmlFor="goals" className="text-sm sm:text-base font-bold text-gray-900">Career Goals</Label>
+                <Textarea
+                  id="goals"
+                  placeholder="What are your career goals? Where do you want to be in 2-3 years?"
+                  value={formData.goals}
+                  onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
+                  className="mt-1.5 min-h-[100px] sm:min-h-[120px] bg-white border-gray-200 focus:border-black focus:ring-black"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="experience" className="text-sm sm:text-base font-bold text-gray-900">Experience (Optional)</Label>
+                <Textarea
+                  id="experience"
+                  placeholder="Tell us about your relevant experience, projects, or achievements..."
+                  value={formData.experience}
+                  onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                  className="mt-1.5 min-h-[100px] sm:min-h-[120px] bg-white border-gray-200 focus:border-black focus:ring-black"
+                />
+              </div>
+            </motion.div>
+
+            {/* Save Button */}
+            <div className="flex justify-end gap-3 pt-4 sm:pt-5 border-t border-gray-100">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/dashboard')}
+                type="button"
+                className="text-xs sm:text-sm px-4 border-gray-300 hover:bg-gray-50"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                type="button"
+                className="bg-black hover:bg-gray-800 text-white text-xs sm:text-sm px-6 shadow-md"
+              >
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                <Save className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default Profile;
