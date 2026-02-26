@@ -16,6 +16,9 @@ ENV/
 
 # Firebase
 firebase_key.json
+firebase-credentials.json
+*credentials*.json
+*service-account*.json
 
 # IDE
 .vscode/

@@ -5,20 +5,25 @@ services:
     region: oregon
     plan: free
     branch: main
-    buildCommand: pip install -r requirements.txt
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PROJECT_NAME
         value: SkillRoute
       - key: ENV
         value: production
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: FIREBASE_PROJECT_ID
-        sync: false
-      - key: FIREBASE_PRIVATE_KEY
-        sync: false
-      - key: FIREBASE_CLIENT_EMAIL
-        sync: false
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false
+      - key: AZURE_OPENAI_API_KEY
+        sync: false
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      - key: AZURE_OPENAI_DEPLOYMENT_NAME
+        sync: false
+      - key: AZURE_OPENAI_API_VERSION
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
