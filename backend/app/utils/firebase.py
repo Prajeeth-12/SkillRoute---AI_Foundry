@@ -5,10 +5,10 @@ import json
 
 _db = None
 
-def get_db():
-    global _db
-    if _db is not None:
-        return _db
+def init_firebase_app():
+    """Initialize Firebase app (idempotent — safe to call multiple times)."""
+    if firebase_admin._apps:
+        return  # already initialized
 
     FIREBASE_SERVICE_ACCOUNT = os.getenv("FIREBASE_SERVICE_ACCOUNT")
     if not FIREBASE_SERVICE_ACCOUNT:
@@ -19,10 +19,14 @@ def get_db():
     except json.JSONDecodeError as e:
         raise RuntimeError(f"FIREBASE_SERVICE_ACCOUNT is not valid JSON: {e}")
 
-    if not firebase_admin._apps:
-        cred = credentials.Certificate(service_account_info)
-        firebase_admin.initialize_app(cred)
+    cred = credentials.Certificate(service_account_info)
+    firebase_admin.initialize_app(cred)
 
+def get_db():
+    global _db
+    if _db is not None:
+        return _db
+    init_firebase_app()
     _db = firestore.client()
     return _db
 
