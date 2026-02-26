@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+spacy==3.7.2
+firebase-admin
+openai
+python-dotenv
+pydantic

@@ -1,13 +1,15 @@
+import json
+import os
+
 import firebase_admin
 from firebase_admin import credentials, firestore
-import os
-import json
 
-FIREBASE_SERVICE_ACCOUNT = os.getenv("FIREBASE_SERVICE_ACCOUNT")
-if not FIREBASE_SERVICE_ACCOUNT:
+service_account_raw = os.environ.get("FIREBASE_SERVICE_ACCOUNT")
+if not service_account_raw:
     raise RuntimeError("FIREBASE_SERVICE_ACCOUNT is required")
 
-cred = credentials.Certificate(json.loads(FIREBASE_SERVICE_ACCOUNT))
+service_account_info = json.loads(service_account_raw)
+cred = credentials.Certificate(service_account_info)
 
 if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
