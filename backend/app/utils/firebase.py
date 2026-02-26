@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import os
 
-FIREBASE_KEY_PATH = os.getenv("FIREBASE_KEY_PATH", "firebase_key.json")
+FIREBASE_KEY_PATH = os.getenv("FIREBASE_CREDENTIALS", "firebase-credentials.json")
 
 cred = credentials.Certificate(FIREBASE_KEY_PATH)
 

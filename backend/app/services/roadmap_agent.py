@@ -1,8 +1,12 @@
 import os
 import json
-from openai import AsyncOpenAI
+from openai import AsyncAzureOpenAI
 
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = AsyncAzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+)
 
 SYSTEM_PROMPT = """
 You are an AI Learning Roadmap Planner.
@@ -64,7 +68,7 @@ Return ONLY valid JSON in this exact format:
 
 async def generate_roadmap(profile: dict) -> dict:
     response = await client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini"),
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": json.dumps(profile)}
@@ -117,7 +121,7 @@ async def adapt_roadmap(current_data: dict) -> dict:
     }
     
     response = await client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini"),
         messages=[
             {"role": "system", "content": ADAPT_SYSTEM_PROMPT},
             {"role": "user", "content": json.dumps(input_data)}

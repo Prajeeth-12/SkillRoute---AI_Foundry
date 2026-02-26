@@ -278,10 +278,10 @@ const ProfileSetup = () => {
                 <div className="flex flex-col items-center">
                   <div
                     className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300 text-sm sm:text-base ${index === currentStep
-                        ? 'bg-black text-white shadow-lg'
-                        : index < currentStep
-                          ? 'bg-black text-white'
-                          : 'bg-white text-gray-400 border-2 border-gray-200'
+                      ? 'bg-black text-white shadow-lg'
+                      : index < currentStep
+                        ? 'bg-black text-white'
+                        : 'bg-white text-gray-400 border-2 border-gray-200'
                       }`}
                   >
                     {index < currentStep ? (
@@ -291,10 +291,10 @@ const ProfileSetup = () => {
                     )}
                   </div>
                   <span className={`text-xs sm:text-sm font-bold mt-2 whitespace-nowrap transition-colors ${index === currentStep
-                      ? 'text-black'
-                      : index < currentStep
-                        ? 'text-gray-900'
-                        : 'text-gray-400'
+                    ? 'text-black'
+                    : index < currentStep
+                      ? 'text-gray-900'
+                      : 'text-gray-400'
                     }`}>{step.title}</span>
                 </div>
                 {index < steps.length - 1 && (
@@ -368,8 +368,8 @@ const ProfileSetup = () => {
                               type="button"
                               onClick={() => toggleSkill(skill)}
                               className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${formData.skills.includes(skill)
-                                  ? 'bg-black text-white shadow-md'
-                                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-black border border-gray-200'
+                                ? 'bg-black text-white shadow-md'
+                                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-black border border-gray-200'
                                 }`}
                             >
                               {skill}
@@ -427,8 +427,8 @@ const ProfileSetup = () => {
                               type="button"
                               onClick={() => toggleInterest(domain.name)}
                               className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${formData.interests.includes(domain.name)
-                                  ? 'border-black bg-gray-50 shadow-md'
-                                  : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
+                                ? 'border-black bg-gray-50 shadow-md'
+                                : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
                                 }`}
                             >
                               <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 mx-auto ${formData.interests.includes(domain.name) ? 'text-black' : 'text-gray-600'}`} />
@@ -450,8 +450,8 @@ const ProfileSetup = () => {
                               type="button"
                               onClick={() => toggleInterest(domain.name)}
                               className={`p-2.5 sm:p-3.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 border-2 ${formData.interests.includes(domain.name)
-                                  ? 'border-black bg-gray-50 shadow-md'
-                                  : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
+                                ? 'border-black bg-gray-50 shadow-md'
+                                : 'border-gray-200 hover:border-gray-400 bg-white hover:shadow-sm'
                                 }`}
                             >
                               <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 mx-auto ${formData.interests.includes(domain.name) ? 'text-black' : 'text-gray-600'}`} />
