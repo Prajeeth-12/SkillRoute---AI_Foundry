@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: skillroute-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PROJECT_NAME
+        value: SkillRoute
+      - key: ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false
+      - key: AZURE_OPENAI_API_KEY
+        sync: false
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      - key: AZURE_OPENAI_DEPLOYMENT_NAME
+        sync: false
+      - key: AZURE_OPENAI_API_VERSION
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
