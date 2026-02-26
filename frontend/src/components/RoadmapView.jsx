@@ -2,14 +2,27 @@ import { useState } from 'react'
 import axios from 'axios'
 import { auth } from '../firebase'
 import ProgressTracker from './ProgressTracker'
-import { CheckCircle2, RefreshCw, Sparkles, RotateCcw, Clock, Square, CheckSquare } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { CheckCircle2, RefreshCw, Sparkles, Clock, Square, CheckSquare, ChevronDown, ChevronUp, ExternalLink, BookOpen, Play, FileText, BookMarked } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useToast } from '../contexts/ToastContext'
+
+// Resource icon mapping (matches backend RESOURCE_META)
+const RESOURCE_META = {
+  docs:    { label: 'Docs',    Icon: BookMarked, color: 'text-blue-500'   },
+  course:  { label: 'Course',  Icon: BookOpen,   color: 'text-violet-500' },
+  video:   { label: 'Video',   Icon: Play,       color: 'text-red-500'    },
+  article: { label: 'Article', Icon: FileText,   color: 'text-emerald-500'},
+  project: { label: 'Project', Icon: BookMarked, color: 'text-orange-500' },
+}
 
 const RoadmapView = ({ roadmap, onGenerate, onRefresh, loading }) => {
   const [updating, setUpdating] = useState(false)
+  const [expandedMilestones, setExpandedMilestones] = useState({})
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
   const toast = useToast()
+
+  const toggleMilestones = (index) =>
+    setExpandedMilestones(prev => ({ ...prev, [index]: !prev[index] }))
 
   const handlePhaseToggle = async (index, currentStatus) => {
     setUpdating(true)
@@ -187,6 +200,84 @@ const RoadmapView = ({ roadmap, onGenerate, onRefresh, loading }) => {
                             </li>
                           ))}
                         </ul>
+                      )}
+
+                      {/* ── Milestones with resources (from gap-analyzer adopted roadmap) ── */}
+                      {phase.milestones && phase.milestones.length > 0 && (
+                        <div className="mt-3">
+                          <button
+                            onClick={() => toggleMilestones(index)}
+                            className="flex items-center gap-1.5 text-[11px] font-semibold text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors"
+                          >
+                            {expandedMilestones[index] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                            {expandedMilestones[index] ? 'Hide' : 'Show'} {phase.milestones.length} learning topic{phase.milestones.length !== 1 ? 's' : ''} & resources
+                          </button>
+
+                          <AnimatePresence initial={false}>
+                            {expandedMilestones[index] && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="mt-2 space-y-2">
+                                  {phase.milestones.map((ms, mi) => (
+                                    <div key={mi} className="rounded-lg border border-gray-200 dark:border-zinc-700 overflow-hidden">
+                                      {/* Topic header */}
+                                      <div className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-zinc-800">
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-xs font-semibold text-gray-800 dark:text-white capitalize">{ms.name}</span>
+                                          {ms.estimated_hours > 0 && (
+                                            <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                                              <Clock className="w-2.5 h-2.5" />~{ms.estimated_hours}h
+                                            </span>
+                                          )}
+                                        </div>
+                                        <span className="text-[10px] text-gray-400">{ms.resources?.length || 0} resources</span>
+                                      </div>
+                                      {/* Resources */}
+                                      {ms.resources && ms.resources.length > 0 && (
+                                        <div className="divide-y divide-gray-100 dark:divide-zinc-800">
+                                          {ms.resources.map((res, ri) => {
+                                            const meta = RESOURCE_META[res.type] || RESOURCE_META.article
+                                            const { Icon, color } = meta
+                                            return (
+                                              <a
+                                                key={ri}
+                                                href={res.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-between gap-3 px-3 py-2 hover:bg-gray-50 dark:hover:bg-zinc-800/50 group transition-colors"
+                                              >
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                  <Icon className={`w-3.5 h-3.5 shrink-0 ${color}`} />
+                                                  <div className="min-w-0">
+                                                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-violet-600 dark:group-hover:text-violet-400 truncate transition-colors">
+                                                      {res.title}
+                                                    </p>
+                                                    <p className="text-[10px] text-gray-400 flex items-center gap-1">
+                                                      <span className="capitalize">{meta.label}</span>
+                                                      {res.duration && res.duration !== 'varies' && (
+                                                        <><span>·</span>{res.duration}</>
+                                                      )}
+                                                    </p>
+                                                  </div>
+                                                </div>
+                                                <ExternalLink className="w-3 h-3 shrink-0 text-gray-300 dark:text-zinc-600 group-hover:text-violet-500 transition-colors" />
+                                              </a>
+                                            )
+                                          })}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       )}
                     </div>
                   </motion.div>

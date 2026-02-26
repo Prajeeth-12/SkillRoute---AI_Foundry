@@ -21,6 +21,8 @@ SKILLS_TAXONOMY: Dict[str, Set[str]] = {
         "perl", "bash", "shell", "powershell", "sql", "html", "css", "sass", "less",
         "objective-c", "groovy", "lua", "haskell", "erlang", "elixir", "clojure",
         "f#", "cobol", "fortran", "solidity", "assembly",
+        # Shader / graphics languages
+        "hlsl", "glsl", "wgsl",
     },
     "framework": {
         # Frontend
@@ -46,6 +48,11 @@ SKILLS_TAXONOMY: Dict[str, Set[str]] = {
         "mocha", "chai", "storybook",
         # Async / Messaging
         "celery", "grpc", "opentelemetry",
+        # Game engines
+        "unity", "unreal engine", "godot", "pygame", "monogame", "libgdx",
+        "phaser", "babylon.js", "three.js", "cocos2d", "rpg maker", "construct",
+        # Graphics / rendering
+        "opengl", "directx", "vulkan", "webgl", "metal",
     },
     "tool": {
         # Version control
@@ -143,6 +150,86 @@ SKILL_ALIASES: Dict[str, str] = {
     "rest api": "rest",        "restful": "rest",         "rest apis": "rest",
     # Spring
     "spring-boot": "spring boot",
+    # Game engines
+    "unreal": "unreal engine",  "ue4": "unreal engine",  "ue5": "unreal engine",
+    "godot engine": "godot",
+    "unity3d": "unity",         "unity 3d": "unity",
+    "three js": "three.js",     "threejs": "three.js",
+    "babylon js": "babylon.js", "babylonjs": "babylon.js",
+    # Graphics
+    "open gl": "opengl",        "direct x": "directx",   "direct3d": "directx",
+}
+
+
+# ─── Role → expected skill set (used when JD is a short title) ───────────────
+# Keys are lowercase keywords; first match wins.
+ROLE_SKILL_MAP: Dict[str, List[str]] = {
+    # Game development
+    "game developer":      ["c++", "c#", "unity", "unreal engine", "python", "lua",
+                            "opengl", "directx", "vulkan", "git", "jira"],
+    "game dev":            ["c++", "c#", "unity", "unreal engine", "python", "lua",
+                            "opengl", "directx", "vulkan", "git"],
+    "unity developer":     ["c#", "unity", "git", "jira", "blender", "python"],
+    "unreal developer":    ["c++", "unreal engine", "hlsl", "git", "jira"],
+    "graphics programmer": ["c++", "opengl", "vulkan", "directx", "hlsl", "glsl", "git"],
+    # Web
+    "frontend developer":  ["javascript", "typescript", "react", "html", "css",
+                            "tailwind", "git", "webpack", "vite"],
+    "frontend engineer":   ["javascript", "typescript", "react", "html", "css",
+                            "tailwind", "git"],
+    "backend developer":   ["python", "java", "node.js", "fastapi", "django",
+                            "postgresql", "redis", "docker", "git"],
+    "backend engineer":    ["python", "java", "node.js", "fastapi", "django",
+                            "postgresql", "redis", "docker", "git"],
+    "full stack":          ["javascript", "typescript", "react", "nodejs", "python",
+                            "fastapi", "postgresql", "docker", "git"],
+    "fullstack":           ["javascript", "typescript", "react", "nodejs", "python",
+                            "fastapi", "postgresql", "docker", "git"],
+    "web developer":       ["javascript", "html", "css", "react", "git"],
+    # Data / AI
+    "data scientist":      ["python", "r", "pandas", "numpy", "scikit-learn",
+                            "pytorch", "tensorflow", "sql", "matplotlib", "git"],
+    "data engineer":       ["python", "sql", "spark", "airflow", "kafka",
+                            "aws", "docker", "postgresql", "git"],
+    "machine learning":    ["python", "pytorch", "tensorflow", "scikit-learn",
+                            "pandas", "numpy", "docker", "git"],
+    "ml engineer":         ["python", "pytorch", "tensorflow", "scikit-learn",
+                            "docker", "kubernetes", "mlflow", "git"],
+    "ai engineer":         ["python", "pytorch", "tensorflow", "langchain",
+                            "openai", "docker", "git"],
+    "llm engineer":        ["python", "langchain", "llamaindex", "pytorch",
+                            "fastapi", "docker", "git"],
+    # DevOps / Cloud
+    "devops":              ["docker", "kubernetes", "terraform", "ansible",
+                            "github actions", "aws", "linux", "python", "git"],
+    "cloud engineer":      ["aws", "azure", "gcp", "terraform", "kubernetes",
+                            "docker", "python", "git"],
+    "sre":                 ["python", "kubernetes", "docker", "terraform",
+                            "prometheus", "grafana", "linux", "git"],
+    # Mobile
+    "ios developer":       ["swift", "objective-c", "xcode", "git"],
+    "android developer":   ["kotlin", "java", "android studio", "git"],
+    "mobile developer":    ["flutter", "react native", "swift", "kotlin", "git"],
+    # Security
+    "security engineer":   ["python", "linux", "docker", "kubernetes",
+                            "oauth", "jwt", "vault", "git"],
+    # Embedded
+    "embedded engineer":   ["c", "c++", "assembly", "python", "linux", "git"],
+    "firmware engineer":   ["c", "c++", "assembly", "linux", "git"],
+    # ── Tool-based quick targets ─────────────────────────────────────────────
+    "react developer":     ["react", "javascript", "typescript", "html", "css",
+                            "tailwind", "redux", "jest", "vite", "git"],
+    "docker engineer":     ["docker", "kubernetes", "linux", "bash", "git",
+                            "terraform", "ansible", "prometheus", "nginx"],
+    "python developer":    ["python", "fastapi", "django", "flask", "postgresql",
+                            "redis", "celery", "pytest", "git", "docker"],
+    "kubernetes engineer": ["kubernetes", "docker", "helm", "terraform", "linux",
+                            "ansible", "prometheus", "grafana", "git", "bash"],
+    "aws engineer":        ["aws", "ec2", "s3", "lambda", "terraform", "docker",
+                            "python", "git", "api gateway"],
+    "machine learning engineer": ["python", "pytorch", "tensorflow", "scikit-learn",
+                                  "pandas", "numpy", "mlflow", "docker", "git",
+                                  "sql"],
 }
 
 # ─── Flat lookup: skill_name → category ──────────────────────────────────────
@@ -193,6 +280,19 @@ class SkillExtractor:
         for skills in self.extract(text).values():
             all_skills.update(skills)
         return sorted(all_skills)
+
+    def infer_skills_from_role(self, text: str) -> List[str]:
+        """
+        When direct skill extraction yields nothing (e.g. text = 'game developer'),
+        match the text against ROLE_SKILL_MAP keywords and return the inferred
+        canonical skill list.  Returns [] if no role keyword matches.
+        """
+        lowered = text.lower().strip()
+        # Check multi-word keys first (longest match wins)
+        for key in sorted(ROLE_SKILL_MAP.keys(), key=len, reverse=True):
+            if key in lowered:
+                return ROLE_SKILL_MAP[key]
+        return []
 
     def get_category(self, skill: str) -> str:
         """Returns the taxonomy category for a skill name; defaults to 'tool'."""
