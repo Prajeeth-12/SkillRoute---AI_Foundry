@@ -6,3 +6,9 @@ openai
 firebase-admin
 httptools
 uvloop
+# ── Skill Gap Analyzer dependencies ──────────────────────
+PyMuPDF           # PDF in-memory parsing  (fitz)
+python-docx       # DOCX in-memory parsing
+spacy             # NLP enrichment (optional; graceful fallback if model missing)
+# After installing spaCy, download the small model:
+#   python -m spacy download en_core_web_sm

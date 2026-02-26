@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, User, LogOut, Moon, Sun } from 'lucide-react';
+import { Compass, User, LogOut, Moon, Sun, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from './button';
@@ -31,6 +31,13 @@ export function FloatingHeader({ onLogout, userName }) {
 				</div>
 
 				<div className="flex items-center gap-2">
+					<button
+						onClick={() => navigate('/skill-gap')}
+						className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 hover:bg-violet-200 dark:hover:bg-violet-900/50 transition-colors"
+					>
+						<Zap className="w-3 h-3" />
+						Skill Gap
+					</button>
 					{userName && <span className="text-xs font-semibold text-gray-900 dark:text-white hidden sm:inline-block mr-2">{userName}</span>}
 
 					{/* Profile Circle Avatar */}

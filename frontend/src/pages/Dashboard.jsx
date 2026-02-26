@@ -10,7 +10,7 @@ import ProgressTracker from '../components/ProgressTracker'
 import { FloatingHeader } from '../components/ui/floating-header'
 import ConfirmModal from '../components/ConfirmModal'
 import { useToast } from '../contexts/ToastContext'
-import { RefreshCw, RotateCcw } from 'lucide-react'
+import { RefreshCw, RotateCcw, Zap } from 'lucide-react'
 import axios from 'axios'
 
 const Dashboard = () => {
@@ -135,6 +135,23 @@ const Dashboard = () => {
       />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+        {/* ── Skill Gap Analyzer entry card ── */}
+        <div
+          onClick={() => navigate('/skill-gap')}
+          className="mt-6 mb-2 cursor-pointer group bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 transition-all rounded-2xl p-4 flex items-center justify-between shadow-sm"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">Skill Gap Analyzer</p>
+              <p className="text-xs text-violet-200">Upload resume · compare against any JD · get a personalised roadmap</p>
+            </div>
+          </div>
+          <span className="text-white/80 group-hover:translate-x-1 transition-transform text-sm font-semibold">Try →</span>
+        </div>
+
         {roadmap?.career_decision && (
           <CareerMatchCard careerDecision={roadmap.career_decision} />
         )}

@@ -8,6 +8,7 @@ const SignUp = lazy(() => import('./components/ui/SignUp'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Profile = lazy(() => import('./pages/Profile'))
 const ProfileSetup = lazy(() => import('./components/ProfileSetup'))
+const SkillGapAnalyzer = lazy(() => import('./pages/SkillGapAnalyzer'))
 
 function App() {
   const [user, setUser] = useState(null)
@@ -61,6 +62,10 @@ function App() {
         <Route
           path="/dashboard"
           element={user ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/skill-gap"
+          element={user ? <SkillGapAnalyzer /> : <Navigate to="/login" />}
         />
         <Route
           path="/"
